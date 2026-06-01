@@ -3,6 +3,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import { env } from './config/env.js'
 import { errorMiddleware } from './middlewares/error.middleware.js'
+import authRouter from './modules/auth/auth.routes.js'
 
 const app = express()
 
@@ -24,7 +25,7 @@ app.get('/health', (req, res) => {
 })
 
 // API routes
-// app.use('/api/auth', authRouter)
+app.use('/api/auth', authRouter)
 // app.use('/api/tasks', tasksRouter)
 
 // 404 handler 

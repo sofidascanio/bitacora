@@ -2,8 +2,8 @@ export class ApiError extends Error {
     constructor(statusCode, message, errors = []) {
         super(message)
         this.statusCode = statusCode
-        this.errors = errors  // array de errores de validacion opcionales
-        this.isOperational = true  // distingue errores
+        this.errors = errors // array de errores de validación opcionales
+        this.isOperational = true // distingue errores operacionales
         Error.captureStackTrace(this, this.constructor)
     }
 
@@ -11,19 +11,19 @@ export class ApiError extends Error {
         return new ApiError(400, message, errors)
     }
 
-    static unauthorized(message = 'Unauthorized') {
+    static unauthorized(message = 'No autorizado') {
         return new ApiError(401, message)
     }
 
-    static forbidden(message = 'Forbidden') {
+    static forbidden(message = 'Acceso prohibido') {
         return new ApiError(403, message)
     }
 
-    static notFound(message = 'Resource not found') {
+    static notFound(message = 'Recurso no encontrado') {
         return new ApiError(404, message)
     }
 
-    static internal(message = 'Internal server error') {
+    static internal(message = 'Error interno del servidor') {
         return new ApiError(500, message)
     }
 }
