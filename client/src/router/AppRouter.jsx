@@ -4,6 +4,7 @@ import { AppLayout } from '../components/layout/AppLayout.jsx'
 import { LoginPage } from '../pages/LoginPage.jsx'
 import { RegisterPage } from '../pages/RegisterPage.jsx'
 import { TasksPage } from '../pages/TasksPage.jsx'
+import { NotesPage } from '../pages/NotesPage.jsx'
 
 function DashboardPage() {
   return <div style={{ padding: 'var(--space-lg) var(--space-margin)' }}>Dashboard </div>
@@ -19,8 +20,9 @@ export function AppRouter() {
 
             <Route element={<ProtectedRoute />}>
                 <Route element={<AppLayout />}>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/tasks" element={<TasksPage />} />
+                    <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/tasks" element={<TasksPage />} />
+                    <Route path="/notes" element={<NotesPage />} />
                 </Route>
             </Route>
 

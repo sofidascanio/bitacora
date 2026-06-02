@@ -5,6 +5,8 @@ import { env } from './config/env.js'
 import { errorMiddleware } from './middlewares/error.middleware.js'
 import authRouter from './modules/auth/auth.routes.js'
 import tasksRouter from './modules/tasks/tasks.routes.js'
+import notesRouter from './modules/notes/notes.routes.js'
+import categoriesRouter from './modules/categories/categories.routes.js'
 
 const app = express()
 
@@ -28,6 +30,8 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api/auth', authRouter)
 app.use('/api/tasks', tasksRouter)
+app.use('/api/notes', notesRouter)
+app.use('/api/categories', categoriesRouter)
 
 // 404 handler 
 app.use((req, res) => {
