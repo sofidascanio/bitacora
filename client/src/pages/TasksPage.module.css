@@ -1,0 +1,76 @@
+.page { padding: var(--space-lg) var(--space-margin); max-width: 1400px; }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.eyebrow {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+.title { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; }
+
+.headerActions { display: flex; gap: var(--space-sm); align-items: center; }
+
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--surface-container-low);
+    border-radius: var(--radius-full);
+    padding: 8px var(--space-md);
+}
+.searchInput {
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: var(--on-surface);
+    width: 200px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    align-items: start;
+}
+
+.column {
+    background: var(--surface-container-low);
+    border-radius: var(--radius-xl);
+    padding: var(--space-md);
+    min-height: 400px;
+}
+
+.columnHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+.columnLabel { font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--secondary); }
+.columnCount {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--surface-container);
+    color: var(--secondary);
+    border-radius: var(--radius-full);
+    padding: 2px 8px;
+}
+
+.columnBody { display: flex; flex-direction: column; gap: var(--space-sm); }
+.empty { font-size: 13px; color: var(--secondary); opacity: 0.5; text-align: center; padding: var(--space-lg) 0; }
+
+.state { text-align: center; padding: var(--space-xl); color: var(--secondary); }
+.stateError { text-align: center; padding: var(--space-xl); color: var(--error); }
