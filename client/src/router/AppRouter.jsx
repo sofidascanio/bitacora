@@ -5,10 +5,8 @@ import { LoginPage } from '../pages/LoginPage.jsx'
 import { RegisterPage } from '../pages/RegisterPage.jsx'
 import { TasksPage } from '../pages/TasksPage.jsx'
 import { NotesPage } from '../pages/NotesPage.jsx'
-
-function DashboardPage() {
-  return <div style={{ padding: 'var(--space-lg) var(--space-margin)' }}>Dashboard </div>
-}
+import { CalendarPage } from '../pages/CalendarPage.jsx'
+import { DashboardPage } from '../pages/DashboardPage.jsx'
 
 export function AppRouter() {
     return (
@@ -23,6 +21,8 @@ export function AppRouter() {
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/tasks" element={<TasksPage />} />
                     <Route path="/notes" element={<NotesPage />} />
+                    <Route path="/calendar" element={<CalendarPage />} />
+                    <Route path="/dashboard" element={<DashboardPage />} />
                 </Route>
             </Route>
 

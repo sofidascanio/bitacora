@@ -1,0 +1,101 @@
+.page {
+    padding: var(--space-lg) var(--space-margin);
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.eyebrow {
+    display: block;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--primary); margin-bottom: 4px;
+}
+.title { font-size: 40px; font-weight: 700; letter-spacing: -0.02em; }
+.date { font-size: 14px; color: var(--secondary); }
+
+/* bento stats */
+.bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+}
+
+.statCard {
+    background: var(--surface);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-xl);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+.statHighlight {
+    background: var(--on-background);
+    border-color: transparent;
+}
+.statHighlight .statLabel,
+.statHighlight .statValue { color: var(--surface); }
+
+.statLabel { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--secondary); }
+.statValue { font-size: 36px; font-weight: 700; letter-spacing: -0.02em; color: var(--on-surface); line-height: 1; }
+
+/* progress */
+.progressCard {
+    background: var(--surface);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-xl);
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+.progressHeader { display: flex; justify-content: space-between; align-items: center; }
+.progressLabel { font-size: 14px; font-weight: 600; color: var(--on-surface); }
+.progressPct { font-size: 24px; font-weight: 700; color: var(--primary); }
+.progressBar { height: 6px; background: var(--surface-container-high); border-radius: var(--radius-full); overflow: hidden; }
+.progressFill { height: 100%; background: var(--primary); border-radius: var(--radius-full); transition: width 0.6s ease; }
+.progressSub { font-size: 13px; color: var(--secondary); }
+
+/* section */
+.section { display: flex; flex-direction: column; gap: var(--space-md); }
+.sectionHeader { display: flex; justify-content: space-between; align-items: center; }
+.sectionTitle  { font-size: 20px; font-weight: 700; }
+.seeAll {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 13px; color: var(--primary); font-weight: 600; font-family: var(--font-family);
+}
+.seeAll:hover { text-decoration: underline; }
+
+.taskList { display: flex; flex-direction: column; gap: 2px; }
+
+.taskRow {
+    display: flex; align-items: center; gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    border-bottom: 1px solid var(--surface-container-high);
+}
+.taskRow:hover { background: var(--surface-container-low); }
+
+.priorityDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.high   { background: var(--primary); }
+.medium { background: var(--secondary); }
+.low    { background: var(--tertiary); }
+
+.taskTitle { flex: 1; font-size: 14px; color: var(--on-surface); }
+.taskDue   { font-size: 12px; color: var(--secondary); white-space: nowrap; }
+
+.empty { font-size: 14px; color: var(--secondary); padding: var(--space-md) 0; text-align: center; }
+
+@media (max-width: 768px) {
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .page { padding: var(--space-md); }
+}

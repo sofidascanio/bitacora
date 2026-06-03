@@ -5,26 +5,27 @@ import { Button } from '../../../../components/common/Button/Button.jsx'
 import styles from './TaskForm.module.css'
 
 const EMPTY_FORM = {
-  title: '', description: '',
-  status: 'TODO', priority: 'MEDIUM',
-  dueDate: '', categoryId: '', tagIds: [],
+    title: '', description: '',
+    status: 'TODO', priority: 'MEDIUM',
+    dueDate: '', categoryId: '', tagIds: [],
 }
 
 export function TaskForm({ task = null, onClose }) {
-    const isEditing = !!task
+    // es edicion real solo si la task tiene id 
+    const isEditing = !!task?.id
 
-    const [form, setForm] = useState(
-        task
-        ? { title: task.title,
-            description: task.description || '',
-            status: task.status,
-            priority: task.priority,
+    const [form, setForm] = useState(() => ({
+        ...EMPTY_FORM,
+        ...(task && {
+            title: task.title ?? '',
+            description: task.description ?? '',
+            status: task.status ?? EMPTY_FORM.status,
+            priority: task.priority ?? EMPTY_FORM.priority,
             dueDate: task.dueDate ? task.dueDate.split('T')[0] : '',
-            categoryId: task.category?.id || '',
-            tagIds: task.tags?.map((t) => t.id) || [],
-        }
-        : EMPTY_FORM
-    )
+            categoryId: task.category?.id ?? '',
+            tagIds: task.tags?.map((t) => t.id) ?? [],
+        }),
+    }))
 
     const { mutate: createTask, isPending: creating } = useCreateTask()
     const { mutate: updateTask, isPending: updating } = useUpdateTask()

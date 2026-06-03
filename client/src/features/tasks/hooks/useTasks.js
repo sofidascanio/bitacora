@@ -8,6 +8,7 @@ export const taskKeys = {
     list: (filters) => [...taskKeys.lists(), filters],
     details: () => [...taskKeys.all, 'detail'],
     detail: (id) => [...taskKeys.details(), id],
+    calendar: () => [...taskKeys.all, 'calendar'],
 }
 
 export function useTasks(filters = {}) {
@@ -25,14 +26,16 @@ export function useTask(id) {
     })
 }
 
+function invalidateTaskQueries(qc) {
+    qc.invalidateQueries({ queryKey: taskKeys.lists() })
+    qc.invalidateQueries({ queryKey: taskKeys.calendar() })
+}
+
 export function useCreateTask() {
     const qc = useQueryClient()
     return useMutation({
         mutationFn: (data) => tasksApi.create(data).then((r) => r.data),
-        onSuccess: () => {
-            // invalida todas las listas para que se repita el fetch
-            qc.invalidateQueries({ queryKey: taskKeys.lists() })
-        },
+        onSuccess: () => invalidateTaskQueries(qc),
     })
 }
 
@@ -41,9 +44,8 @@ export function useUpdateTask() {
     return useMutation({
         mutationFn: ({ id, ...data }) => tasksApi.update(id, data).then((r) => r.data),
         onSuccess: (updatedTask) => {
-            // actualiza el detalle en cache sin repetir el fetch
             qc.setQueryData(taskKeys.detail(updatedTask.id), updatedTask)
-            qc.invalidateQueries({ queryKey: taskKeys.lists() })
+            invalidateTaskQueries(qc)
         },
     })
 }
@@ -54,7 +56,7 @@ export function useDeleteTask() {
         mutationFn: (id) => tasksApi.remove(id),
         onSuccess: (_, id) => {
             qc.removeQueries({ queryKey: taskKeys.detail(id) })
-            qc.invalidateQueries({ queryKey: taskKeys.lists() })
+            invalidateTaskQueries(qc)
         },
     })
 }
@@ -63,8 +65,6 @@ export function useReorderTask() {
     const qc = useQueryClient()
     return useMutation({
         mutationFn: ({ id, ...data }) => tasksApi.reorder(id, data).then((r) => r.data),
-        onSuccess: () => {
-            qc.invalidateQueries({ queryKey: taskKeys.lists() })
-        },
+        onSuccess: () => invalidateTaskQueries(qc),
     })
 }

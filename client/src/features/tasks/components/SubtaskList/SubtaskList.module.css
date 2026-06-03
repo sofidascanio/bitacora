@@ -1,0 +1,147 @@
+.container {
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--outline-variant);
+}
+
+.header { margin-bottom: var(--space-sm); }
+
+.title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-xs);
+}
+
+.count {
+    font-size: 11px;
+    background: var(--surface-container);
+    color: var(--secondary);
+    border-radius: var(--radius-full);
+    padding: 1px 6px;
+    font-weight: 600;
+}
+
+.progressBar {
+    height: 3px;
+    background: var(--surface-container-high);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+.progressFill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 6px var(--space-xs);
+    border-radius: var(--radius-lg);
+    transition: background var(--transition-fast);
+}
+.item:hover { background: var(--surface-container-low); }
+
+.checkbox {
+    width: 18px; height: 18px;
+    border: 2px solid var(--outline);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.checked {
+    background: var(--on-surface);
+    border-color: var(--on-surface);
+    color: var(--surface);
+}
+
+.label {
+    flex: 1;
+    font-size: 14px;
+    color: var(--on-surface);
+    line-height: 1.4;
+}
+.done {
+    text-decoration: line-through;
+    color: var(--secondary);
+    opacity: 0.6;
+}
+
+.deleteBtn {
+    opacity: 0;
+    color: var(--secondary);
+    display: flex; align-items: center;
+    padding: 2px;
+    border-radius: var(--radius-sm);
+    transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+.item:hover .deleteBtn { opacity: 1; }
+.deleteBtn:hover { color: var(--error); }
+
+.addForm {
+    padding: 6px var(--space-xs);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.addInput {
+    background: var(--surface-container-low);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius-lg);
+    padding: 8px var(--space-sm);
+    font-size: 14px;
+    color: var(--on-surface);
+    font-family: var(--font-family);
+    width: 100%;
+}
+.addInput:focus { outline: none; }
+
+.addActions { display: flex; gap: var(--space-xs); }
+
+.confirmBtn {
+    background: var(--on-background);
+    color: var(--on-primary);
+    border-radius: var(--radius-lg);
+    padding: 6px var(--space-md);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-family);
+    transition: opacity var(--transition-fast);
+}
+.confirmBtn:disabled { opacity: 0.5; }
+
+.cancelBtn {
+    color: var(--secondary);
+    padding: 6px var(--space-sm);
+    font-size: 13px;
+    font-family: var(--font-family);
+    border-radius: var(--radius-lg);
+    transition: color var(--transition-fast);
+}
+.cancelBtn:hover { color: var(--on-surface); }
+
+.addBtn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 8px var(--space-xs);
+    font-size: 13px;
+    color: var(--secondary);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+.addBtn:hover { color: var(--primary); background: var(--surface-container-low); }
