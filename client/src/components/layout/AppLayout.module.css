@@ -1,7 +1,44 @@
 .layout { display: flex; min-height: 100vh; }
+
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 39;
+    backdrop-filter: blur(2px);
+}
+
 .main {
     margin-left: var(--sidebar-width);
     flex: 1;
     min-height: 100vh;
     background: var(--background);
+    transition: margin-left var(--transition-base);
+}
+
+.mobileHeader {
+    display: none;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--outline-variant);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.menuBtn {
+    display: flex; align-items: center;
+    color: var(--on-surface);
+    padding: 4px;
+    border-radius: var(--radius-base);
+}
+.mobileLogo { font-size: 18px; font-weight: 700; }
+
+@media (max-width: 768px) {
+    .main { margin-left: 0; }
+    .mobileHeader { display: flex; }
+    .overlay { display: block; }
 }

@@ -116,3 +116,33 @@
 }
 
 :global(.fc-daygrid-day-frame) { min-height: 80px; }
+
+/* para mejorar dark mode */
+:global(.dark .fc-theme-standard td),
+:global(.dark .fc-theme-standard th),
+:global(.dark .fc-theme-standard .fc-scrollgrid) {
+    border-color: var(--outline-variant) !important;
+}
+
+:global(.dark .fc-col-header-cell-cushion),
+:global(.dark .fc-daygrid-day-number) {
+    color: var(--on-surface) !important;
+}
+
+:global(.dark .fc-day-today) {
+    background: color-mix(in srgb, var(--primary) 15%, transparent) !important;
+}
+
+:global(.dark .fc-button-primary) {
+    background: var(--surface-container-high) !important;
+    border-color: var(--outline-variant) !important;
+    color: var(--on-surface) !important;
+}
+
+:global(.dark .fc-toolbar-title) {
+    color: var(--on-surface) !important;
+}
+
+:global(.dark .fc-daygrid-day-frame) {
+    background: var(--surface-container-lowest);
+}

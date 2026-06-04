@@ -74,3 +74,10 @@
 
 .state { text-align: center; padding: var(--space-xl); color: var(--secondary); }
 .stateError { text-align: center; padding: var(--space-xl); color: var(--error); }
+
+@media (max-width: 768px) {
+    .page { padding: var(--space-md); }
+    .title { font-size: 28px; }
+    .headerActions { flex-wrap: wrap; width: 100%; }
+    .searchWrapper { flex: 1; min-width: 0; }
+}

@@ -95,7 +95,7 @@ export const tasksRepository = {
         // construye el update dinamicamente
         const updateData = { ...taskData }
 
-        // si se envían tags, reemplaza todos (delete + create)
+        // si se envian tags, reemplaza todos (delete + create)
         if (tagIds !== undefined) {
             updateData.tags = {
                 deleteMany: {},
@@ -108,7 +108,19 @@ export const tasksRepository = {
         return prisma.task.update({
             where: { id, userId },
             data: updateData,
-            select: taskSelect,
+            select: {
+                ...taskSelect,
+                // incluye subtareas en la respuesta del update para que el cache quede completo
+                subtasks: { select: taskSelect, orderBy: { order: 'asc' } },
+            },
+        })
+    },
+
+    // actualiza el status de todas las subtareas de un padre
+    async updateSubtasksStatus({ parentId, userId, status }) {
+        return prisma.task.updateMany({
+            where: { parentId, userId },
+            data: { status },
         })
     },
 

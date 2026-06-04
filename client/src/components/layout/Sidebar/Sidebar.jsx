@@ -10,7 +10,7 @@ const NAV_ITEMS = [
     { to: '/notes', icon: 'sticky_note_2', label: 'Notas' },
 ]
 
-export function Sidebar() {
+export function Sidebar({ mobileOpen = false, onMobileClose }) {
     const { user, logout } = useAuthStore()
     const { toggleTheme, theme } = useUIStore()
     const navigate = useNavigate()
@@ -21,7 +21,13 @@ export function Sidebar() {
     }
 
     return (
-        <aside className={styles.sidebar}>
+        <aside className={`${styles.sidebar} ${mobileOpen ? styles.mobileOpen : ''}`}>
+                <button className={styles.mobileCloseBtn}
+                        onClick={onMobileClose}
+                        title="Cerrar Menu">
+                    <span className="material-symbols-outlined">close</span>
+                </button>
+            
             <div className={styles.brand}>
                 <h1 className={styles.brandName}>Bitacora</h1>
                 <p className={styles.brandSub}>Agenda Minimalista</p>

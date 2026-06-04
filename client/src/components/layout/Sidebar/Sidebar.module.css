@@ -95,3 +95,23 @@
 
 .logoutBtn { color: var(--secondary); padding: 4px; border-radius: var(--radius-base); transition: color var(--transition-fast); }
 .logoutBtn:hover { color: var(--error); }
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--transition-base);
+        z-index: 40;
+    }
+    .mobileOpen { transform: translateX(0); }
+    .mobileCloseBtn {
+        display: flex;
+        align-self: flex-end;
+        margin-right: var(--space-md);
+        color: var(--secondary);
+        padding: 4px;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobileCloseBtn { display: none; }
+}

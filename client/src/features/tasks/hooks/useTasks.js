@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { tasksApi } from '../../../api/tasks.api.js'
+import { toast } from '../../../store/useToastStore.js'
 
 // keys centralizadas, para evitar strings duplicados en la app
 export const taskKeys = {
@@ -35,7 +36,15 @@ export function useCreateTask() {
     const qc = useQueryClient()
     return useMutation({
         mutationFn: (data) => tasksApi.create(data).then((r) => r.data),
-        onSuccess: () => invalidateTaskQueries(qc),
+        onSuccess: (newTask) => {
+            // si es una subtarea, refresca el detail del padre para que aparezca en el panel
+            if (newTask.parentId) {
+                qc.invalidateQueries({ queryKey: taskKeys.detail(newTask.parentId) })
+                toast.success('Tarea creada.')
+            }
+            invalidateTaskQueries(qc)
+        },
+        onError: () => toast.error('No se pudo crear la tarea')
     })
 }
 
@@ -45,6 +54,10 @@ export function useUpdateTask() {
         mutationFn: ({ id, ...data }) => tasksApi.update(id, data).then((r) => r.data),
         onSuccess: (updatedTask) => {
             qc.setQueryData(taskKeys.detail(updatedTask.id), updatedTask)
+            // si es una subtarea, sincroniza también el detail del padre
+            if (updatedTask.parentId) {
+                qc.invalidateQueries({ queryKey: taskKeys.detail(updatedTask.parentId) })
+            }
             invalidateTaskQueries(qc)
         },
     })
@@ -53,11 +66,18 @@ export function useUpdateTask() {
 export function useDeleteTask() {
     const qc = useQueryClient()
     return useMutation({
-        mutationFn: (id) => tasksApi.remove(id),
-        onSuccess: (_, id) => {
+        // .then(r => r.data) para recibir la task eliminada y leer su parentId
+        mutationFn: (id) => tasksApi.remove(id).then((r) => r.data),
+        onSuccess: (deletedTask, id) => {
             qc.removeQueries({ queryKey: taskKeys.detail(id) })
+            // si era una subtarea, refresca el detail del padre para que desaparezca
+            if (deletedTask?.parentId) {
+                qc.invalidateQueries({ queryKey: taskKeys.detail(deletedTask.parentId) })
+                toast.success('Tarea borrada.')
+            }
             invalidateTaskQueries(qc)
         },
+        onError: () => toast.error('No se pudo borrar la tarea.'),
     })
 }
 

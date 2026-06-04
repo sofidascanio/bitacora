@@ -6,6 +6,11 @@ function normalizeTags(tasks) {
     const normalize = (task) => ({
         ...task,
         tags: task.tags?.map((t) => t.tag) ?? [],
+        // normaliza tags de subtareas si vienen incluidas
+        subtasks: task.subtasks?.map((s) => ({
+            ...s,
+            tags: s.tags?.map((t) => t.tag) ?? [],
+        })),
     })
 
     if (Array.isArray(tasks)) return tasks.map(normalize)
@@ -42,6 +47,15 @@ export const tasksService = {
     async updateTask({ id, userId, data }) {
         const existing = await tasksRepository.findById({ id, userId })
         if (!existing) throw ApiError.notFound('Tarea no encontrada')
+
+        // si se marca como DONE, propaga el status a todas las subtareas
+        if (data.status === 'DONE' && existing.subtasks?.length > 0) {
+            await tasksRepository.updateSubtasksStatus({
+                parentId: id,
+                userId,
+                status: 'DONE',
+            })
+        }
 
         const task = await tasksRepository.update({ id, userId, data })
         return normalizeTags(task)
