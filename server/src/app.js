@@ -7,6 +7,7 @@ import authRouter from './modules/auth/auth.routes.js'
 import tasksRouter from './modules/tasks/tasks.routes.js'
 import notesRouter from './modules/notes/notes.routes.js'
 import categoriesRouter from './modules/categories/categories.routes.js'
+import expensesRouter from './modules/expenses/expenses.routes.js'
 
 const app = express()
 
@@ -32,6 +33,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/tasks', tasksRouter)
 app.use('/api/notes', notesRouter)
 app.use('/api/categories', categoriesRouter)
+app.use('/api/expenses', expensesRouter)
 
 // 404 handler 
 app.use((req, res) => {

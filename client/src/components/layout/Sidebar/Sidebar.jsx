@@ -8,6 +8,7 @@ const NAV_ITEMS = [
     { to: '/tasks', icon: 'event_note', label: 'Tareas' },
     { to: '/calendar', icon: 'calendar_today', label: 'Calendario' },
     { to: '/notes', icon: 'sticky_note_2', label: 'Notas' },
+    { to: '/expenses', icon: 'account_balance_wallet', label: 'Gastos' },
 ]
 
 export function Sidebar({ mobileOpen = false, onMobileClose }) {

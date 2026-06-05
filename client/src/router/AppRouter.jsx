@@ -7,6 +7,7 @@ import { TasksPage } from '../pages/TasksPage.jsx'
 import { NotesPage } from '../pages/NotesPage.jsx'
 import { CalendarPage } from '../pages/CalendarPage.jsx'
 import { DashboardPage } from '../pages/DashboardPage.jsx'
+import { ExpensesPage } from '../pages/ExpensesPage.jsx'
 
 export function AppRouter() {
     return (
@@ -23,6 +24,7 @@ export function AppRouter() {
                     <Route path="/notes" element={<NotesPage />} />
                     <Route path="/calendar" element={<CalendarPage />} />
                     <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route path="/expenses" element={<ExpensesPage />} />
                 </Route>
             </Route>
 
