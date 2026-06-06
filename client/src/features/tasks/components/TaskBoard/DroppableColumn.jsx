@@ -26,7 +26,7 @@ export function DroppableColumn({ column, tasks, onSelect }) {
                             <span className="material-symbols-outlined" style={{ fontSize: 32, opacity: 0.2 }}>
                                 inbox
                             </span>
-                            <p>Drop tasks here</p>
+                            <p>Arrastra tus tareas aca.</p>
                         </div>
                     )}
                     {tasks.map((task) => (

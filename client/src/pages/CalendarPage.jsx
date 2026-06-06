@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin  from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import esLocale from '@fullcalendar/core/locales/es'
 import { useCalendarTasks } from '../features/calendar/hooks/useCalendarTasks.js'
 import { useUpdateTask } from '../features/tasks/hooks/useTasks.js'
 import { TaskDetail } from '../features/tasks/components/TaskDetail/TaskDetail.jsx'
@@ -13,6 +14,12 @@ const PRIORITY_COLORS = {
     HIGH: '#b32822',
     MEDIUM: '#5c5f60',
     LOW: '#939597',
+};
+
+const PRIORITY_LABELS = {
+    HIGH: 'Alta',
+    MEDIUM: 'Media',
+    LOW: 'Baja',
 }
 
 export function CalendarPage() {
@@ -78,7 +85,7 @@ export function CalendarPage() {
                         {Object.entries(PRIORITY_COLORS).map(([priority, color]) => (
                             <div key={priority} className={styles.legendItem}>
                                 <span className={styles.legendDot} style={{ background: color }} />
-                                <span className={styles.legendLabel}>{priority}</span>
+                                <span className={styles.legendLabel}>{PRIORITY_LABELS[priority]}</span>
                             </div>
                         ))}
                         {isLoading && (
@@ -91,6 +98,18 @@ export function CalendarPage() {
                     <FullCalendar ref={calendarRef}
                                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                                 initialView="dayGridMonth"
+                                locale={esLocale}
+                                titleFormat={(info) => {
+                                    const date = info.date.marker
+                                    const month = date.toLocaleString('es', { month: 'long' })
+                                    const year = date.getFullYear()
+                                    return month.charAt(0).toUpperCase() + month.slice(1) + ' ' + year
+                                }}
+                                buttonText={{
+                                    today: 'hoy',
+                                    month: 'mes',
+                                    week: 'semana',
+                                }}
                                 headerToolbar={{
                                     left: 'prev,next today',
                                     center: 'title',

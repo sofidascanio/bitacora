@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useExpenses, useExpenseStats, useExpenseCategories,
-        useDeleteExpense, useUpsertBudget, useCreateExpenseCategory,
+        useDeleteExpense, useUpsertBudget,
 } from '../features/expenses/hooks/useExpenses.js'
 import { ExpenseForm } from '../features/expenses/components/ExpenseForm/ExpenseForm.jsx'
 import { Button } from '../components/common/Button/Button.jsx'
@@ -9,18 +9,6 @@ import styles from './ExpensesPage.module.css'
 const MONTH_NAMES = [
     'Enero','Febrero','Marzo','Abril','Mayo','Junio',
     'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre',
-]
-
-// categorias predeterminadas
-const DEFAULT_CATEGORIES = [
-    { name: 'Comida', color: '#ef4444', icon: 'restaurant' },
-    { name: 'Transporte', color: '#f97316', icon: 'directions_car' },
-    { name: 'Hogar', color: '#8b5cf6', icon: 'home' },
-    { name: 'Salud', color: '#10b981', icon: 'favorite' },
-    { name: 'Entretenimiento', color: '#3b82f6', icon: 'sports_esports' },
-    { name: 'Compras', color: '#ec4899', icon: 'shopping_bag' },
-    { name: 'Educación', color: '#6366f1', icon: 'school' },
-    { name: 'Otros', color: '#6b7280', icon: 'more_horiz' },
 ]
 
 export function ExpensesPage() {
@@ -39,7 +27,6 @@ export function ExpensesPage() {
 
     const { mutate: deleteExpense } = useDeleteExpense()
     const { mutate: upsertBudget } = useUpsertBudget()
-    const { mutate: createCategory } = useCreateExpenseCategory()
 
     const expenses = expenseData?.expenses ?? []
 
@@ -51,10 +38,6 @@ export function ExpensesPage() {
     function handleNextMonth() {
         if (month === 12) { setMonth(1); setYear((y) => y + 1) }
         else setMonth((m) => m + 1)
-    }
-
-    function seedCategories() {
-        DEFAULT_CATEGORIES.forEach((cat) => createCategory(cat))
     }
 
     function handleBudgetChange(categoryId, value) {
@@ -104,7 +87,7 @@ export function ExpensesPage() {
                 {stats?.byCategory?.some((r) => r.overBudget) && (
                     <div className={styles.overBudgetAlert}>
                         <span className="material-symbols-outlined" style={{ fontSize: 18 }}>warning</span>
-                        Te pasaste del presupuesto en {stats.byCategory.filter((r) => r.overBudget).length} categor{stats.byCategory.filter((r) => r.overBudget).length === 1 ? 'y' : 'ies'}
+                        Te pasaste de presupuesto en {stats.byCategory.filter((r) => r.overBudget).length} categoría{stats.byCategory.filter((r) => r.overBudget).length === 1 ? '' : 's'}
                     </div>
                 )}
             </div>
@@ -123,14 +106,6 @@ export function ExpensesPage() {
             {/* tab: lista */}
             {activeTab === 'Listado' && (
                 <div className={styles.content}>
-                    {categories.length === 0 && (
-                        <div className={styles.seedPrompt}>
-                            <p>No hay categorías.</p>
-                            <Button variant="secondary" size="sm" onClick={seedCategories}>
-                                Crear categorías por defecto.
-                            </Button>
-                        </div>
-                    )}
 
                     {isLoading && <p className={styles.state}>Cargando...</p>}
 
@@ -160,7 +135,7 @@ export function ExpensesPage() {
                                 {/* datos */}
                                 <div className={styles.expenseInfo}>
                                     <span className={styles.expenseDesc}>
-                                        {expense.description || expense.category?.name || 'Expense'}
+                                        {expense.description || expense.category?.name || 'Gasto'}
                                     </span>
                                     <span className={styles.expenseMeta}>
                                         {expense.category?.name} · {formatDate(expense.date)}
@@ -204,7 +179,7 @@ export function ExpensesPage() {
                                     </div>
                                     <div className={styles.statInfo}>
                                         <span className={styles.statName}>{category?.name}</span>
-                                        <span className={styles.statCount}>{count} expense{count !== 1 ? 's' : ''}</span>
+                                        <span className={styles.statCount}>{count} gasto{count !== 1 ? 's' : ''}</span>
                                     </div>
                                 </div>
 
@@ -213,7 +188,7 @@ export function ExpensesPage() {
                                         {fmt(total)}
                                     </span>
                                     {budget && (
-                                        <span className={styles.statBudget}>of {fmt(budget)}</span>
+                                        <span className={styles.statBudget}>de {fmt(budget)}</span>
                                     )}
                                 </div>
 

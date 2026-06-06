@@ -9,7 +9,6 @@ export function NotesPage() {
     const [selectedNote, setSelectedNote] = useState(null)
     const [search, setSearch] = useState('')
     const [activeCategoryId, setActiveCategoryId] = useState('')
-    const [showNewCategory, setShowNewCategory] = useState(false)
     const [newCatName, setNewCatName] = useState('')
 
     const filters = {
@@ -31,20 +30,6 @@ export function NotesPage() {
         )
     }
 
-    function handleCreateCategory(e) {
-        e.preventDefault()
-        if (!newCatName.trim()) return
-            createCategory(
-            { name: newCatName.trim(), color: '#b32822' },
-            {
-                onSuccess: () => {
-                    setNewCatName('')
-                    setShowNewCategory(false)
-                },
-            }
-        )
-    }
-
     return (
         <div className={styles.layout}>
             {/* panel izquierdo: lista */}
@@ -53,7 +38,7 @@ export function NotesPage() {
                     <h1 className={styles.title}>Notas</h1>
                     <Button size="sm" onClick={handleCreateNote} loading={creating}>
                         <span className="material-symbols-outlined" style={{ fontSize: 16 }}>add</span>
-                        New
+                        Agregar
                     </Button>
                 </div>
 
@@ -84,22 +69,6 @@ export function NotesPage() {
                         </button>
                     ))}
 
-                    {showNewCategory ? (
-                        <form onSubmit={handleCreateCategory} className={styles.newCatForm}>
-                            <input autoFocus
-                                className={styles.newCatInput}
-                                placeholder="Nombre de categoria..."
-                                value={newCatName}
-                                onChange={(e) => setNewCatName(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Escape' && setShowNewCategory(false)}/>
-                        </form>
-                    ) : (
-                        <button className={styles.addCatBtn}
-                                onClick={() => setShowNewCategory(true)}>
-                        <span className="material-symbols-outlined" style={{ fontSize: 14 }}>add</span>
-                            Nueva Categoria
-                        </button>
-                    )}
                 </div>
 
                 {/* lista de notas */}

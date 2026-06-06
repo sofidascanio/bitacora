@@ -9,6 +9,7 @@ const NAV_ITEMS = [
     { to: '/calendar', icon: 'calendar_today', label: 'Calendario' },
     { to: '/notes', icon: 'sticky_note_2', label: 'Notas' },
     { to: '/expenses', icon: 'account_balance_wallet', label: 'Gastos' },
+    { to: '/settings', icon: 'tune', label: 'Ajustes' },
 ]
 
 export function Sidebar({ mobileOpen = false, onMobileClose }) {
@@ -30,8 +31,15 @@ export function Sidebar({ mobileOpen = false, onMobileClose }) {
                 </button>
             
             <div className={styles.brand}>
-                <h1 className={styles.brandName}>Bitacora</h1>
-                <p className={styles.brandSub}>Agenda Minimalista</p>
+                <div className={styles.brandText}>
+                    <h1 className={styles.brandName}>Bitacora</h1>
+                    <p className={styles.brandSub}>Agenda Minimalista</p>
+                </div>
+                <button className={styles.themeBtn} onClick={toggleTheme} title={theme === 'dark' ? 'Modo Claro' : 'Modo Oscuro'}>
+                    <span className="material-symbols-outlined">
+                        {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+                    </span>
+                </button>
             </div>
 
             <nav className={styles.nav}>
@@ -48,13 +56,6 @@ export function Sidebar({ mobileOpen = false, onMobileClose }) {
             </nav>
 
             <div className={styles.bottom}>
-                <button className={styles.themeBtn} onClick={toggleTheme}>
-                    <span className="material-symbols-outlined">
-                        {theme === 'dark' ? 'light_mode' : 'dark_mode'}
-                    </span>
-                    <span>{theme === 'dark' ? 'Modo Claro' : 'Modo Oscuro'}</span>
-                </button>
-
                 <div className={styles.user}>
                     <div className={styles.avatar}>
                         {user?.username?.[0]?.toUpperCase()}

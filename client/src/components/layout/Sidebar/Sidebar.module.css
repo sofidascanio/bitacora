@@ -11,7 +11,14 @@
     z-index: 40;
 }
 
-.brand { padding: 0 var(--space-md) var(--space-xl); }
+.brand {
+    padding: 0 var(--space-md) var(--space-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+}
+.brandText { flex: 1; overflow: hidden; }
 .brandName { font-size: 20px; font-weight: 700; color: var(--on-surface); }
 .brandSub { font-size: 11px; color: var(--secondary); opacity: 0.7; margin-top: 2px; }
 
@@ -58,14 +65,12 @@
 .themeBtn {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    padding: 10px var(--space-md);
+    justify-content: center;
+    padding: 6px;
     border-radius: var(--radius-lg);
     color: var(--secondary);
-    font-size: 14px;
-    font-weight: 500;
-    width: 100%;
-    transition: background var(--transition-fast);
+    flex-shrink: 0;
+    transition: background var(--transition-fast), color var(--transition-fast);
 }
 .themeBtn:hover { background: var(--surface-container); color: var(--on-surface); }
 

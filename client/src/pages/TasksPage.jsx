@@ -34,29 +34,23 @@ export function TasksPage() {
 
                     <div className={styles.headerActions}>
                         <div className={styles.searchWrapper}>
-                            <span
-                                className="material-symbols-outlined"
+                            <span className="material-symbols-outlined"
                                 style={{
                                     color: 'var(--secondary)',
                                     fontSize: 18,
-                                }}
-                            >
+                                }}>
                                 search
                             </span>
 
-                            <input
-                                className={styles.searchInput}
-                                placeholder="Buscar tarea..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
+                            <input className={styles.searchInput}
+                                    placeholder="Buscar tarea..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}/>
                         </div>
 
                         <Button onClick={() => setShowForm(true)}>
-                            <span
-                                className="material-symbols-outlined"
-                                style={{ fontSize: 18 }}
-                            >
+                            <span className="material-symbols-outlined"
+                                style={{ fontSize: 18 }}>
                                 add
                             </span>
                             Nueva Tarea

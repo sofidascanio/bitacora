@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useUpdateNote, useCategories } from '../../hooks/useNotes.js'
 import { Button } from '../../../../components/common/Button/Button.jsx'
+import { CategorySelect } from '../../../../components/common/CategorySelect/CategorySelect.jsx'
+import { TagSelect } from '../../../../components/common/TagSelect/TagSelect.jsx'
 import styles from './NoteEditor.module.css'
 
 export function NoteEditor({ note, onClose }) {
@@ -48,21 +50,17 @@ export function NoteEditor({ note, onClose }) {
         <div className={styles.editor}>
             <header className={styles.header}>
                 <div className={styles.headerLeft}>
-                    <select className={styles.categorySelect}
-                            value={note.category?.id || ''}
-                            onChange={handleCategoryChange}>
-                        <option value="">No category</option>
-                            {categories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>{cat.name}</option>
-                        ))}
-                    </select>
+                    <CategorySelect value={note.category?.id || ''}
+                                    onChange={(val) => updateNote({ id: note.id, categoryId: val || null })}/>
+                    <TagSelect value={note.tags?.map((t) => t.id) || []}
+                            onChange={(tagIds) => updateNote({ id: note.id, tagIds })}/>
                     <span className={styles.saveStatus}>
-                        {isPending ? 'Saving...' : isDirty ? 'Unsaved changes' : 'Saved'}
+                        {isPending ? 'Guardando...' : isDirty ? 'Sin guardar' : 'Guardado'}
                     </span>
                 </div>
                 <div className={styles.headerRight}>
                     <Button variant="ghost" size="sm" onClick={handleSaveNow} disabled={!isDirty}>
-                        Save now
+                        Guardar
                     </Button>
                     <button className={styles.closeBtn} onClick={onClose}>
                         <span className="material-symbols-outlined">close</span>
@@ -74,7 +72,7 @@ export function NoteEditor({ note, onClose }) {
                 <textarea className={styles.titleInput}
                         value={title}
                         onChange={handleTitleChange}
-                        placeholder="Note title..."
+                        placeholder="Titulo de la nota..."
                         rows={1}
                         onInput={(e) => {
                             // auto-resize
@@ -85,15 +83,15 @@ export function NoteEditor({ note, onClose }) {
                 <textarea className={styles.contentInput}
                         value={content}
                         onChange={handleContentChange}
-                        placeholder="Start writing..."/>
+                        placeholder="Escribi tu nota..."/>
             </div>
 
             <footer className={styles.footer}>
                 <span className={styles.meta}>
-                    Last edited {formatDate(note.updatedAt)}
+                    Ultima Edición: {formatDate(note.updatedAt)}
                 </span>
                 <span className={styles.wordCount}>
-                    {content.trim() ? content.trim().split(/\s+/).length : 0} words
+                    {content.trim() ? content.trim().split(/\s+/).length : 0} palabras
                 </span>
             </footer>
         </div>

@@ -24,7 +24,7 @@ export function AppLayout() {
                             onClick={() => setMobileSidebarOpen(true)}>
                         <span className="material-symbols-outlined">menu</span>
                     </button>
-                    <span className={styles.mobileLogo}>Focus</span>
+                    <span className={styles.mobileLogo}>Bitacora</span>
                 </div>
 
                 <Outlet />

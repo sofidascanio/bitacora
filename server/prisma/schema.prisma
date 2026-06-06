@@ -21,7 +21,8 @@ model User {
   notes      Note[]
   categories Category[]
 
-  expenseCategories ExpenseCategory[]
+  tags Tag[]
+
   expenses          Expense[]
   budgets           Budget[]
 }
@@ -95,10 +96,14 @@ model Category {
 }
 
 model Tag {
-  id    String        @id @default(cuid())
-  name  String        @unique
-  tasks TagsOnTasks[]
-  notes TagsOnNotes[]
+  id          String        @id @default(cuid())
+  name        String
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks       TagsOnTasks[]
+  notes       TagsOnNotes[]
+
+  @@unique([name, userId])  // un usuario no puede tener dos tags iguales
 }
 
 // tabla muchos-muchos Task <-> Tag
@@ -123,17 +128,15 @@ model TagsOnNotes {
 
 model ExpenseCategory {
   id          String    @id @default(cuid())
-  name        String
+  name        String    @unique 
   description String?
   color       String?   // hex color para UI
   icon        String?   // nombre del icono (material symbols)
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   expenses    Expense[]
   budgets     Budget[]
   createdAt   DateTime  @default(now())
 
-  @@unique([name, userId])
 }
 
 model Expense {

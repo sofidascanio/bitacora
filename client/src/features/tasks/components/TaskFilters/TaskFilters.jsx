@@ -22,7 +22,7 @@ export function TaskFilters({ filters, onChange }) {
             <select className={styles.select}
                     value={filters.priority || ''}
                     onChange={(e) => handleChange('priority', e.target.value)}>
-                <option value="">All priorities</option>
+                <option value="">Todas las prioridades</option>
                 <option value="HIGH">Alta</option>
                 <option value="MEDIUM">Media</option>
                 <option value="LOW">Baja</option>

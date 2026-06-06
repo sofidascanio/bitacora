@@ -4,9 +4,13 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-md);
     flex-wrap: wrap;
     gap: var(--space-md);
+}
+
+.filtersRow {
+    margin-bottom: var(--space-md);
 }
 
 .eyebrow {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useCreateExpense, useUpdateExpense, useExpenseCategories } from '../../hooks/useExpenses.js'
 import { Button } from '../../../../components/common/Button/Button.jsx'
 import { Input }  from '../../../../components/common/Input/Input.jsx'
@@ -29,6 +29,11 @@ export function ExpenseForm({ expense = null, onClose }) {
     const { mutate: create, isPending: creating } = useCreateExpense()
     const { mutate: update, isPending: updating } = useUpdateExpense()
     const isPending = creating || updating
+
+    const [catOpen, setCatOpen] = useState(false)
+    const catRef = useRef(null)
+
+    const selectedCategory = categories.find((c) => c.id === form.categoryId) ?? null
 
     function validate() {
         const e = {}
@@ -64,6 +69,15 @@ export function ExpenseForm({ expense = null, onClose }) {
         }
     }
 
+    // cierra al hacer click afuera
+    useEffect(() => {
+        function handleClickOutside(e) {
+            if (catRef.current && !catRef.current.contains(e.target)) setCatOpen(false)
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
+
     return (
         <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
             <div className={styles.modal}>
@@ -93,22 +107,54 @@ export function ExpenseForm({ expense = null, onClose }) {
                     {/* categoria */}
                     <div className={styles.field}>
                         <label className={styles.label}>Categoría</label>
-                        <div className={styles.categoryGrid}>
-                            {categories.map((cat) => (
-                                <button key={cat.id}
-                                        type="button"
-                                        className={`${styles.catOption} ${form.categoryId === cat.id ? styles.catSelected : ''}`}
-                                        style={{ '--cat-color': cat.color || 'var(--secondary)' }}
-                                        onClick={() => {
-                                            setForm((p) => ({ ...p, categoryId: cat.id }))
-                                            setErrors((p) => ({ ...p, categoryId: undefined }))
-                                        }}>
-                                    <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
-                                        {cat.icon || 'category'}
-                                    </span>
-                                    <span className={styles.catName}>{cat.name}</span>
-                                </button>
-                            ))}
+                        <div className={styles.categoryDropdown} ref={catRef}>
+                            <button type="button"
+                                    className={`${styles.catTrigger} ${catOpen ? styles.catTriggerOpen : ''}`}
+                                    onClick={() => setCatOpen((o) => !o)}>
+                                {selectedCategory ? (
+                                        <span className={styles.catSelected}>
+                                            <span className={styles.catIconCircle}
+                                                style={{ '--cat-color': selectedCategory.color || 'var(--secondary)' }}>
+                                                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
+                                                    {selectedCategory.icon || 'category'}
+                                                </span>
+                                            </span>
+                                            {selectedCategory.name}
+                                        </span>
+                                    ) : (
+                                        <span className={styles.catPlaceholder}>Elegi una categoría</span>
+                                )}
+                                <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
+                                    {catOpen ? 'expand_less' : 'expand_more'}
+                                </span>
+                            </button>
+
+                            {catOpen && (
+                                <div className={styles.catDropdown}>
+                                    {categories.map((cat) => (
+                                        <button key={cat.id}
+                                                type="button"
+                                                className={`${styles.catOption} ${form.categoryId === cat.id ? styles.catOptionActive : ''}`}
+                                                onClick={() => {
+                                                setForm((p) => ({ ...p, categoryId: cat.id }))
+                                                setErrors((p) => ({ ...p, categoryId: undefined }))
+                                                setCatOpen(false)}}>
+                                            <span className={styles.catIconCircle}
+                                                style={{ '--cat-color': cat.color || 'var(--secondary)' }}>
+                                                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
+                                                    {cat.icon || 'category'}
+                                                </span>
+                                            </span>
+                                            <span>{cat.name}</span>
+                                            {form.categoryId === cat.id && (
+                                                <span className="material-symbols-outlined" style={{ fontSize: 14, marginLeft: 'auto' }}>
+                                                    check
+                                                </span>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         {errors.categoryId && <span className={styles.error}>{errors.categoryId}</span>}
                     </div>

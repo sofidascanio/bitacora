@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useCreateTask, useUpdateTask } from '../../hooks/useTasks.js'
 import { Input } from '../../../../components/common/Input/Input.jsx'
 import { Button } from '../../../../components/common/Button/Button.jsx'
+import { CategorySelect } from '../../../../components/common/CategorySelect/CategorySelect.jsx'
+import { TagSelect } from '../../../../components/common/TagSelect/TagSelect.jsx'
 import styles from './TaskForm.module.css'
 
 const EMPTY_FORM = {
@@ -103,10 +105,25 @@ export function TaskForm({ task = null, onClose }) {
                         </div>
                     </div>
 
+                    {/* categoria */}
+                    <div className={styles.field}>
+                        <label className={styles.label}>Categoría</label>
+                        <CategorySelect value={form.categoryId}
+                                        onChange={(val) => setForm((p) => ({ ...p, categoryId: val }))}/>
+                    </div>
+
+                    {/* tags */}
+                    <div className={styles.field}>
+                        <label className={styles.label}>Etiquetas</label>
+                        <TagSelect value={form.tagIds}
+                                onChange={(val) => setForm((p) => ({ ...p, tagIds: val }))}/>
+                    </div>
+
+
                     <Input id="dueDate"
                         name="dueDate"
                         type="date"
-                        label="Fecha de Vencimiento"
+                        label="Fecha Limite"
                         value={form.dueDate}
                         onChange={handleChange}/>
 

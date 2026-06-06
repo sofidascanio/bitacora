@@ -19,12 +19,8 @@ export const expensesService = {
     },
 
     async createExpense({ data, userId }) {
-        // verifica que la categoria pertenece al usuario
-        const category = await expensesRepository.findCategoryById({
-            id: data.categoryId, userId,
-        })
+        const category = await expensesRepository.findCategoryById(data.categoryId)
         if (!category) throw ApiError.notFound('No se encontro la categoría.')
-
         const expense = await expensesRepository.create({ data, userId })
         return normalizeAmount(expense)
     },
@@ -77,7 +73,7 @@ export const expensesService = {
 
     // categorias
     async getCategories(userId) {
-        return expensesRepository.findAllCategories(userId)
+        return expensesRepository.findAllCategories()
     },
 
     async createCategory({ data, userId }) {

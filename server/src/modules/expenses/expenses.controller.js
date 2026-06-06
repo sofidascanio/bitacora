@@ -57,7 +57,7 @@ export const expensesController = {
     // categorias 
     async getCategories(req, res, next) {
         try {
-            const categories = await expensesService.getCategories(req.user.id)
+            const categories = await expensesService.getCategories()
             res.json(categories)
         } catch (err) { next(err) }
     },

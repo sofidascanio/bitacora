@@ -54,34 +54,58 @@
     letter-spacing: 0.05em; text-transform: uppercase; color: var(--secondary);
 }
 
-/* grid de categorias */
-.categoryGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+/* categorias */ 
+.categoryDropdown { position: relative; }
+
+.catTrigger {
+    width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
     gap: var(--space-xs);
+    background: transparent; border: none;
+    border-bottom: 1px solid var(--outline-variant);
+    padding: var(--space-sm) 0;
+    font-size: 14px; font-family: var(--font-family);
+    color: var(--on-surface); cursor: pointer; text-align: left;
+    transition: border-color var(--transition-fast);
+}
+.catTriggerOpen { border-bottom: 2px solid var(--primary); }
+.catTrigger:hover { border-bottom-color: var(--on-surface); }
+
+.catSelected {
+    display: flex; align-items: center; gap: var(--space-sm);
+}
+.catPlaceholder { color: var(--secondary); opacity: 0.5; }
+
+.catIconCircle {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--cat-color) 15%, transparent);
+    color: var(--cat-color); flex-shrink: 0;
+}
+
+.catDropdown {
+    position: absolute;
+    top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--surface);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    z-index: 50;
+    max-height: 280px; overflow-y: auto;
+    padding: var(--space-xs);
 }
 
 .catOption {
-    display: flex; flex-direction: column; align-items: center;
-    gap: 4px; padding: var(--space-sm) var(--space-xs);
+    width: 100%;
+    display: flex; align-items: center; gap: var(--space-sm);
+    padding: 10px var(--space-sm);
     border-radius: var(--radius-lg);
-    border: 2px solid var(--outline-variant);
-    color: var(--secondary);
-    transition: all var(--transition-fast);
-    font-family: var(--font-family);
-    cursor: pointer;
+    font-size: 14px; font-family: var(--font-family);
+    color: var(--on-surface); cursor: pointer; text-align: left;
+    transition: background var(--transition-fast);
 }
-.catOption:hover {
-    border-color: var(--cat-color);
-    color: var(--cat-color);
-    background: color-mix(in srgb, var(--cat-color) 8%, transparent);
-}
-.catSelected {
-    border-color: var(--cat-color) !important;
-    color: var(--cat-color) !important;
-    background: color-mix(in srgb, var(--cat-color) 12%, transparent) !important;
-}
-.catName { font-size: 11px; font-weight: 600; text-align: center; }
+.catOption:hover { background: var(--surface-container-low); }
+.catOptionActive { background: var(--surface-container); font-weight: 600; }
 
 .error { font-size: 12px; color: var(--error); }
 

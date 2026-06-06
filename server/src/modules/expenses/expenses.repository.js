@@ -139,26 +139,25 @@ export const expensesRepository = {
     // categorias
     async findAllCategories(userId) {
         return prisma.expenseCategory.findMany({
-            where: { userId },
             orderBy: { name: 'asc' },
             include: { _count: { select: { expenses: true } } },
         })
     },
 
     async findCategoryById({ id, userId }) {
-        return prisma.expenseCategory.findFirst({ where: { id, userId } })
+        return prisma.expenseCategory.findFirst({ where: { id } })
     },
 
     async createCategory({ data, userId }) {
-        return prisma.expenseCategory.create({ data: { ...data, userId } })
+        return prisma.expenseCategory.create({ data })
     },
 
     async updateCategory({ id, userId, data }) {
-        return prisma.expenseCategory.update({ where: { id, userId }, data })
+        return prisma.expenseCategory.update({ where: { id }, data })
     },
 
     async deleteCategory({ id, userId }) {
-        return prisma.expenseCategory.delete({ where: { id, userId } })
+        return prisma.expenseCategory.delete({ where: { id } })
     },
 
     // presupuestos

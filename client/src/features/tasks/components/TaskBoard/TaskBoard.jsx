@@ -1,12 +1,12 @@
 import { useState, useCallback } from 'react'
 import {
-  DndContext,
-  DragOverlay,
-  PointerSensor,
-  KeyboardSensor,
-  useSensor,
-  useSensors,
-  closestCorners,
+    DndContext,
+    DragOverlay,
+    PointerSensor,
+    KeyboardSensor,
+    useSensor,
+    useSensors,
+    closestCorners,
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable'
 import { DroppableColumn } from './DroppableColumn.jsx'
@@ -15,9 +15,9 @@ import { useUpdateTask, useReorderTask } from '../../hooks/useTasks.js'
 import styles from './TaskBoard.module.css'
 
 const COLUMNS = [
-    { key: 'TODO', label: 'To Do' },
-    { key: 'IN_PROGRESS', label: 'In Progress' },
-    { key: 'DONE', label: 'Done' },
+    { key: 'TODO', label: 'Pendiente' },
+    { key: 'IN_PROGRESS', label: 'En Progreso' },
+    { key: 'DONE', label: 'Terminadas' },
 ]
 
 export function TaskBoard({ tasks, onSelectTask }) {
