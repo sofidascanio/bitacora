@@ -32,7 +32,7 @@ export function NoteCard({ note, onEdit }) {
             <footer className={styles.footer}>
                 <div className={styles.tags}>
                     {note.tags?.map((tag) => (
-                        <span key={tag.id} className={styles.tag}>#{tag.name}</span>
+                        <span key={tag.id} className={styles.tag}> {tag.name}</span>
                     ))}
                 </div>
                 <time className={styles.date}>
@@ -44,7 +44,7 @@ export function NoteCard({ note, onEdit }) {
 }
 
 function formatDate(date) {
-    return new Date(date).toLocaleDateString('en-US', {
+    return new Date(date).toLocaleDateString('es-ES', {
         month: 'short', day: 'numeric', year: 'numeric',
     })
 }

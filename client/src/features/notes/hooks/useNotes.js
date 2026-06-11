@@ -50,8 +50,25 @@ export function useUpdateNote() {
     return useMutation({
         mutationFn: ({ id, ...data }) => notesApi.update(id, data).then((r) => r.data),
         onSuccess: (updated) => {
-            qc.setQueryData(noteKeys.detail(updated.id), updated)
-            qc.invalidateQueries({ queryKey: noteKeys.lists() })
+            // cancela refetch en vuelo
+            qc.cancelQueries({ queryKey: noteKeys.detail(updated.id) })
+
+            // actualiza detail
+            qc.setQueryData(noteKeys.detail(updated.id), (prev) => {
+                if (!prev) return updated
+                return { ...prev, ...updated }
+            })
+
+            // actualiza listas sin refetch
+            qc.setQueriesData({ queryKey: noteKeys.lists() }, (prev) => {
+                if (!prev) return prev
+                return {
+                    ...prev,
+                    notes: prev.notes?.map((n) =>
+                        n.id === updated.id ? { ...n, ...updated } : n
+                    ),
+                }
+            })
         },
     })
 }

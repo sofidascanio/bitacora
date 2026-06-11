@@ -29,8 +29,8 @@ export function TaskBoard({ tasks, onSelectTask }) {
     const { mutate: reorderTask } = useReorderTask()
 
     // sincroniza cuando cambia las tasks del servidor (despues de invalidacion de React Query)
-    if (JSON.stringify(tasks.map(t => t.id + t.status + t.order)) !==
-        JSON.stringify(localTasks.map(t => t.id + t.status + t.order))) {
+    if (JSON.stringify(tasks.map(t => t.id + t.status + t.order + t.priority + t.title + t.updatedAt)) !==
+        JSON.stringify(localTasks.map(t => t.id + t.status + t.order + t.priority + t.title + t.updatedAt))) {
         setLocalTasks(tasks)
     }
 

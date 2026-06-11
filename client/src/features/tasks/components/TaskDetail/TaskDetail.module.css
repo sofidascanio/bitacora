@@ -128,3 +128,14 @@
 .propSelect:focus, .propInput:focus { outline: none; }
 
 .propValue { font-size: 14px; color: var(--on-surface); }
+
+.propertyTags {
+    align-items: flex-start;
+    padding-top: 10px;
+    padding-bottom: 6px;
+}
+
+.propTagsWrapper {
+    flex: 1;
+    margin-top: -2px;
+}

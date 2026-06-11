@@ -17,16 +17,19 @@ api.interceptors.request.use((config) => {
 // response: maneja 401 globalmente
 api.interceptors.response.use(
     (response) => response,
-        (error) => {
-            if (error.response?.status === 401) {
-                localStorage.removeItem('token')
-                // redirige sin depender del router
-                if (!window.location.pathname.startsWith('/login')) {
-                    window.location.href = '/login'
-                }
+    (error) => {
+        if (error.response?.status === 401) {
+            // limpia antes de redirigir
+            localStorage.removeItem('token')
+            localStorage.removeItem('auth-storage')
+
+            // solo redirige si no esta ya en login
+            if (!window.location.pathname.startsWith('/login')) {
+                window.location.href = '/login'
             }
-            return Promise.reject(error)
         }
+        return Promise.reject(error)
+    }
 )
 
 export default api

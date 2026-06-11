@@ -29,7 +29,7 @@ export function DashboardPage() {
                     <h1 className={styles.title}>{user?.username}</h1>
                 </div>
                 <p className={styles.date}>
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                    {new Date().toLocaleDateString('es-ES', { weekday: 'long', month: 'long', day: 'numeric' })}
                 </p>
             </header>
 
@@ -85,7 +85,7 @@ export function DashboardPage() {
                             <span className={styles.taskTitle}>{task.title}</span>
                             {task.dueDate && (
                                 <span className={styles.taskDue}>
-                                    {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                    {new Date(task.dueDate).toLocaleDateString('es-ES', { month: 'short', day: 'numeric' })}
                                 </span>
                             )}
                         </div>

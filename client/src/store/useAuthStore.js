@@ -4,26 +4,31 @@ import { persist } from 'zustand/middleware'
 export const useAuthStore = create(
     persist(
         (set) => ({
-            user:  null,
-            token: null,
-            isAuthenticated: false,
+        user:  null,
+        token: null,
 
-            setAuth: (user, token) => {
-                localStorage.setItem('token', token)
-                set({ user, token, isAuthenticated: true })
-            },
+        // derivado, no se persiste por separado
+        get isAuthenticated() {
+            return !!this.token
+        },
 
-            logout: () => {
-                localStorage.removeItem('token')
-                set({ user: null, token: null, isAuthenticated: false })
-            },
+        setAuth: (user, token) => {
+            localStorage.setItem('token', token)
+            set({ user, token })
+        },
 
-            updateUser: (user) => set((state) => ({ user: { ...state.user, ...user } })),
+        logout: () => {
+            localStorage.removeItem('token')
+            set({ user: null, token: null })
+        },
+
+        updateUser: (user) =>
+            set((state) => ({ user: { ...state.user, ...user } })),
         }),
         {
             name: 'auth-storage',
-            // solo persiste user y isAuthenticated, no el token (ya esta en localStorage)
-            partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
+            // persiste user y token
+            partialize: (state) => ({ user: state.user, token: state.token }),
         }
     )
 )

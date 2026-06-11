@@ -114,7 +114,7 @@ function TagRow({ tag, onUpdate, onDelete }) {
     return (
         <div className={styles.row}>
             <span className="material-symbols-outlined" style={{ fontSize: 16, color: 'var(--secondary)' }}>tag</span>
-            <span className={styles.rowName}>#{tag.name}</span>
+            <span className={styles.rowName}> {tag.name}</span>
             <span className={styles.rowMeta}>
                 {tag._count?.tasks ?? 0} tareas · {tag._count?.notes ?? 0} notas
             </span>

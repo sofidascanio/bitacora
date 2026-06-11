@@ -1,7 +1,7 @@
 import { useDeleteTask, useUpdateTask } from '../../hooks/useTasks.js'
 import styles from './TaskCard.module.css'
 
-const PRIORITY_LABELS = { LOW: 'Low', MEDIUM: 'Medium', HIGH: 'High' }
+const PRIORITY_LABELS = { LOW: 'Baja', MEDIUM: 'Media', HIGH: 'Alta' }
 
 export function TaskCard({ task, onEdit }) {
     const { mutate: deleteTask } = useDeleteTask()
@@ -47,7 +47,7 @@ export function TaskCard({ task, onEdit }) {
             <div className={styles.footer}>
                 <div className={styles.tags}>
                     {task.category && (
-                        <span className={styles.category}>{task.category.name}</span>
+                        <span className={styles.category} style={{ backgroundColor: task.category.color }} >{task.category.name}</span>
                     )}
                     {task.tags?.map((tag) => (
                         <span key={tag.id} className={styles.tag}>#{tag.name}</span>
@@ -81,5 +81,5 @@ function isPastDue(date) {
 }
 
 function formatDate(date) {
-    return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    return new Date(date).toLocaleDateString('es-ES', { month: 'short', day: 'numeric' })
 }

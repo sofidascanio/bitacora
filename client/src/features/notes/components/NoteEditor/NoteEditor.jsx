@@ -1,21 +1,30 @@
 import { useState, useEffect, useRef } from 'react'
-import { useUpdateNote, useCategories } from '../../hooks/useNotes.js'
-import { Button } from '../../../../components/common/Button/Button.jsx'
+import { useUpdateNote, useNote } from '../../hooks/useNotes.js'
+import { Button }         from '../../../../components/common/Button/Button.jsx'
 import { CategorySelect } from '../../../../components/common/CategorySelect/CategorySelect.jsx'
-import { TagSelect } from '../../../../components/common/TagSelect/TagSelect.jsx'
+import { TagSelect }      from '../../../../components/common/TagSelect/TagSelect.jsx'
 import styles from './NoteEditor.module.css'
 
-export function NoteEditor({ note, onClose }) {
+export function NoteEditor({ note: initialNote, onClose }) {
+    // useNote suscribe este componente al cache,  se re-renderiza en cada update
+    const { data: liveNote } = useNote(initialNote.id)
+    const note = liveNote ?? initialNote
+
     const [title, setTitle] = useState(note.title)
     const [content, setContent] = useState(note.content || '')
     const [isDirty, setIsDirty] = useState(false)
 
     const { mutate: updateNote, isPending } = useUpdateNote()
-    const { data: categories = [] } = useCategories()
-
     const saveTimer = useRef(null)
 
-    // autosave con debounce de 800ms
+    // sincroniza titulo y contenido si la nota cambia externamente (no cuando isDirty pq el usuario esta escribiendo)
+    useEffect(() => {
+        if (!isDirty) {
+            setTitle(note.title ?? '')
+            setContent(note.content ?? '')
+        }
+    }, [note.id]) // solo al cambiar de nota
+
     useEffect(() => {
         if (!isDirty) return
         clearTimeout(saveTimer.current)
@@ -36,10 +45,6 @@ export function NoteEditor({ note, onClose }) {
         setIsDirty(true)
     }
 
-    function handleCategoryChange(e) {
-        updateNote({ id: note.id, categoryId: e.target.value || null })
-    }
-
     function handleSaveNow() {
         clearTimeout(saveTimer.current)
         updateNote({ id: note.id, title, content })
@@ -50,10 +55,15 @@ export function NoteEditor({ note, onClose }) {
         <div className={styles.editor}>
             <header className={styles.header}>
                 <div className={styles.headerLeft}>
+                    {/* leen de 'note' (cache reactivo), se actualizan solos */}
                     <CategorySelect value={note.category?.id || ''}
-                                    onChange={(val) => updateNote({ id: note.id, categoryId: val || null })}/>
+                                    onChange={(val) =>
+                                        updateNote({ id: note.id, categoryId: val || null })
+                                    }/>
                     <TagSelect value={note.tags?.map((t) => t.id) || []}
-                            onChange={(tagIds) => updateNote({ id: note.id, tagIds })}/>
+                            onChange={(tagIds) =>
+                                updateNote({ id: note.id, tagIds })
+                            }/>
                     <span className={styles.saveStatus}>
                         {isPending ? 'Guardando...' : isDirty ? 'Sin guardar' : 'Guardado'}
                     </span>
@@ -75,11 +85,9 @@ export function NoteEditor({ note, onClose }) {
                         placeholder="Titulo de la nota..."
                         rows={1}
                         onInput={(e) => {
-                            // auto-resize
                             e.target.style.height = 'auto'
                             e.target.style.height = e.target.scrollHeight + 'px'
                         }}/>
-
                 <textarea className={styles.contentInput}
                         value={content}
                         onChange={handleContentChange}
@@ -99,7 +107,7 @@ export function NoteEditor({ note, onClose }) {
 }
 
 function formatDate(date) {
-    return new Date(date).toLocaleDateString('en-US', {
+    return new Date(date).toLocaleDateString('es-ES', {
         month: 'short', day: 'numeric', year: 'numeric',
         hour: '2-digit', minute: '2-digit',
     })

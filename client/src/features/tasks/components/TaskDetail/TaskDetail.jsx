@@ -1,16 +1,54 @@
+import { useRef } from 'react'
 import { useTask, useUpdateTask, useDeleteTask } from '../../hooks/useTasks.js'
 import { useCategories } from '../../../notes/hooks/useNotes.js'
 import { SubtaskList } from '../SubtaskList/SubtaskList.jsx'
+import { TagSelect } from '../../../../components/common/TagSelect/TagSelect.jsx'
 import styles from './TaskDetail.module.css'
 
-const PRIORITY_OPTIONS = ['LOW', 'MEDIUM', 'HIGH']
-const STATUS_OPTIONS = ['TODO', 'IN_PROGRESS', 'DONE']
+const PRIORITY_OPTIONS = {
+    LOW: 'Baja',
+    MEDIUM: 'Media',
+    HIGH: 'Alta',
+}
+
+const STATUS_OPTIONS = {
+    TODO: 'Pendiente',
+    IN_PROGRESS: 'En Progreso',
+    DONE: 'Terminada',
+}
 
 export function TaskDetail({ taskId, onClose }) {
     const { data: task, isLoading } = useTask(taskId)
     const { data: categories = [] } = useCategories()
     const { mutate: updateTask } = useUpdateTask()
     const { mutate: deleteTask } = useDeleteTask()
+
+    // refs para titulo y descripción, sin estado local, se guardan con onBlur
+    const titleRef = useRef(null)
+    const descRef = useRef(null)
+
+    function handleField(field, value) {
+        updateTask({ id: task.id, [field]: value })
+    }
+
+    function handleTitleBlur() {
+        const val = titleRef.current?.value?.trim()
+        if (val && val !== task.title) {
+            handleField('title', val)
+        }
+    }
+
+    function handleDescBlur() {
+        const val = descRef.current?.value ?? ''
+        if (val !== (task.description ?? '')) {
+            handleField('description', val || null)
+        }
+    }
+
+    function handleDelete() {
+        deleteTask(task.id)
+        onClose()
+    }
 
     if (isLoading) {
         return (
@@ -22,32 +60,23 @@ export function TaskDetail({ taskId, onClose }) {
 
     if (!task) return null
 
-    function handleField(field, value) {
-        updateTask({ id: task.id, [field]: value })
-    }
-
-    function handleDelete() {
-        deleteTask(task.id)
-        onClose()
-    }
-
     return (
         <div className={styles.panel}>
             <header className={styles.header}>
                 <div className={styles.headerActions}>
                     <button className={`${styles.statusToggle} ${task.status === 'DONE' ? styles.completed : ''}`}
-                            onClick={() => handleField('status', task.status === 'DONE' ? 'TODO' : 'DONE')}>
+                            onClick={() => handleField('status', task.status === 'DONE' ? 'TODO' : 'DONE')} >
                         <span className="material-symbols-outlined" style={{ fontSize: 18 }}>
                             {task.status === 'DONE' ? 'check_circle' : 'radio_button_unchecked'}
                         </span>
-                        {task.status === 'DONE' ? 'Completed' : 'Mark complete'}
+                        {task.status === 'DONE' ? 'Completada' : 'Marcar como hecha'}
                     </button>
 
                     <div className={styles.rightActions}>
-                        <button className={styles.iconBtn} onClick={handleDelete} title="Delete task">
+                        <button className={styles.iconBtn} onClick={handleDelete} title="Eliminar tarea">
                             <span className="material-symbols-outlined" style={{ fontSize: 18 }}>delete</span>
                         </button>
-                        <button className={styles.iconBtn} onClick={onClose} title="Close">
+                        <button className={styles.iconBtn} onClick={onClose} title="Cerrar">
                             <span className="material-symbols-outlined" style={{ fontSize: 18 }}>close</span>
                         </button>
                     </div>
@@ -55,12 +84,14 @@ export function TaskDetail({ taskId, onClose }) {
             </header>
 
             <div className={styles.body}>
-                {/* titulo editable */}
-                <textarea className={`${styles.titleInput} ${task.status === 'DONE' ? styles.titleDone : ''}`}
+                {/* titulo y descripcion usan defaultValue + ref + onBlur
+                    la key incluye updatedAt para que react re-monte el elemento 
+                    con el valor fresco de cache en cada update del servidor */}
+                <textarea ref={titleRef}
+                        key={`title-${task.id}-${task.updatedAt}`}
+                        className={`${styles.titleInput} ${task.status === 'DONE' ? styles.titleDone : ''}`}
                         defaultValue={task.title}
-                        onBlur={(e) => {
-                            if (e.target.value !== task.title) handleField('title', e.target.value)
-                        }}
+                        onBlur={handleTitleBlur}
                         onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
                         rows={1}
                         onInput={(e) => {
@@ -68,70 +99,98 @@ export function TaskDetail({ taskId, onClose }) {
                             e.target.style.height = e.target.scrollHeight + 'px'
                         }}/>
 
-                {/* descripcion editable */}
-                <textarea className={styles.descInput}
-                        defaultValue={task.description || ''}
-                        placeholder="Agregar una descripción..."
-                        onBlur={(e) => {
-                            if (e.target.value !== (task.description || '')) {
-                            handleField('description', e.target.value || null)
-                            }
-                        }}
+                <textarea ref={descRef}
+                        key={`desc-${task.id}-${task.updatedAt}`}
+                        className={styles.descInput}
+                        defaultValue={task.description ?? ''}
+                        onBlur={handleDescBlur}
+                        placeholder="Agregar descripción..."
                         rows={3}/>
 
-                {/* propiedades */}
+                {/* los selects leen directo del cache via task.X 
+                    se actualizan solos cuando rq re-renderiza
+                    la dueDate tambien usa defaultValue + key pq es un input no controlado */}
                 <div className={styles.properties}>
                     <div className={styles.property}>
                         <span className={styles.propLabel}>Estado</span>
-                        <select className={styles.propSelect}
-                                value={task.status}
-                                onChange={(e) => handleField('status', e.target.value)}>
-                            {STATUS_OPTIONS.map((s) => (
-                                <option key={s} value={s}>{s.replace('_', ' ')}</option>
+                        <select
+                            className={styles.propSelect}
+                            value={task.status}
+                            onChange={(e) => handleField('status', e.target.value)}
+                        >
+                            {Object.entries(STATUS_OPTIONS).map(([value, label]) => (
+                                <option key={value} value={value}>
+                                    {label}
+                                </option>
                             ))}
                         </select>
                     </div>
 
                     <div className={styles.property}>
-                        <span className={styles.propLabel}>Priority</span>
-                        <select className={styles.propSelect}
-                                value={task.priority}
-                                onChange={(e) => handleField('priority', e.target.value)}>
-                            {PRIORITY_OPTIONS.map((p) => (
-                                <option key={p} value={p}>{p}</option>
+                        <span className={styles.propLabel}>Prioridad</span>
+                        <select
+                            className={styles.propSelect}
+                            value={task.priority}
+                            onChange={(e) => handleField('priority', e.target.value)}
+                        >
+                            {Object.entries(PRIORITY_OPTIONS).map(([value, label]) => (
+                                <option key={value} value={value}>
+                                    {label}
+                                </option>
                             ))}
                         </select>
                     </div>
 
                     <div className={styles.property}>
-                        <span className={styles.propLabel}>Fecha de Vencimiento</span>
-                        <input type="date"
+                        <span className={styles.propLabel}>Vencimiento</span>
+                        <input
+                            key={`date-${task.id}-${task.updatedAt}`}
+                            type="date"
                             className={styles.propInput}
                             defaultValue={task.dueDate ? task.dueDate.split('T')[0] : ''}
                             onBlur={(e) =>
-                                handleField('dueDate', e.target.value ? new Date(e.target.value).toISOString() : null)
-                            }/>
+                                handleField(
+                                    'dueDate',
+                                    e.target.value
+                                        ? new Date(e.target.value).toISOString()
+                                        : null
+                                )
+                            }
+                        />
                     </div>
 
                     <div className={styles.property}>
-                        <span className={styles.propLabel}>Categoria</span>
-                        <select className={styles.propSelect}
-                                value={task.category?.id || ''}
-                                onChange={(e) => handleField('categoryId', e.target.value || null)}>
-                            <option value="">Ninguna</option>
+                        <span className={styles.propLabel}>Categoría</span>
+                        <select
+                            className={styles.propSelect}
+                            value={task.category?.id || ''}
+                            onChange={(e) => handleField('categoryId', e.target.value || null)}
+                        >
+                            <option value="">Sin categoría</option>
                             {categories.map((cat) => (
-                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.name}
+                                </option>
                             ))}
                         </select>
                     </div>
 
+                    <div className={`${styles.property} ${styles.propertyTags}`}>
+                        <span className={styles.propLabel}>Tags</span>
+                        <div className={styles.propTagsWrapper}>
+                            <TagSelect
+                                value={task.tags?.map((t) => t.id) ?? []}
+                                onChange={(tagIds) => updateTask({ id: task.id, tagIds })}
+                            />
+                        </div>
+                    </div>
+
                     <div className={styles.property}>
-                        <span className={styles.propLabel}>Creado:</span>
+                        <span className={styles.propLabel}>Creada</span>
                         <span className={styles.propValue}>{formatDate(task.createdAt)}</span>
                     </div>
                 </div>
 
-                {/* subtareas */}
                 <SubtaskList parentTask={task} />
             </div>
         </div>
@@ -139,7 +198,7 @@ export function TaskDetail({ taskId, onClose }) {
 }
 
 function formatDate(date) {
-    return new Date(date).toLocaleDateString('en-US', {
+    return new Date(date).toLocaleDateString('es-ES', {
         month: 'short', day: 'numeric', year: 'numeric',
     })
 }

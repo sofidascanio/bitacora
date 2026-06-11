@@ -70,7 +70,7 @@ export function TagSelect({ value = [], onChange }) {
                                 className={styles.option}
                                 onClick={() => { addTag(tag.id); setQuery(''); }}>
                         <span className="material-symbols-outlined" style={{ fontSize: 14 }}>tag</span>
-                            #{tag.name}
+                            {tag.name}
                         </button>
                     ))}
                 </div>
