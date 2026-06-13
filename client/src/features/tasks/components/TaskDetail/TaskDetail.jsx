@@ -143,20 +143,34 @@ export function TaskDetail({ taskId, onClose }) {
 
                     <div className={styles.property}>
                         <span className={styles.propLabel}>Vencimiento</span>
-                        <input
-                            key={`date-${task.id}-${task.updatedAt}`}
-                            type="date"
-                            className={styles.propInput}
-                            defaultValue={task.dueDate ? task.dueDate.split('T')[0] : ''}
-                            onBlur={(e) =>
-                                handleField(
-                                    'dueDate',
-                                    e.target.value
-                                        ? new Date(e.target.value).toISOString()
-                                        : null
-                                )
-                            }
-                        />
+                        <div className={styles.dateTimeGroup}>
+                            <input key={`date-${task.id}-${task.updatedAt}`}
+                                type="date"
+                                className={styles.propInput}
+                                defaultValue={toDatePart(task.dueDate)}
+                                onBlur={(e) => {
+                                    const date = e.target.value
+                                    if (!date) {
+                                        handleField('dueDate', null)
+                                        return
+                                    }
+                                    // buscar la hora del campo hermano
+                                    const timeInput = e.target.nextSibling
+                                    const time = timeInput?.value || '00:00'
+                                    handleField('dueDate', new Date(`${date}T${time}`).toISOString())
+                                }}/>
+                            <input key={`time-${task.id}-${task.updatedAt}`}
+                                type="time"
+                                className={`${styles.propInput} ${styles.timeInput}`}
+                                defaultValue={toTimePart(task.dueDate)}
+                                onBlur={(e) => {
+                                    const time = e.target.value
+                                    const dateInput = e.target.previousSibling
+                                    const date = dateInput?.value
+                                    if (!date) return // sin fecha, la hora no tiene sentido
+                                    handleField('dueDate', new Date(`${date}T${time || '00:00'}`).toISOString())
+                                }}/>
+                        </div>
                     </div>
 
                     <div className={styles.property}>
@@ -201,4 +215,25 @@ function formatDate(date) {
     return new Date(date).toLocaleDateString('es-ES', {
         month: 'short', day: 'numeric', year: 'numeric',
     })
+}
+
+// convierte iso string a formato que acepta datetime-local: "YYYY-MM-DDTHH:mm"
+function toDatetimeLocal(isoString) {
+    const date = new Date(isoString)
+    const pad = (n) => String(n).padStart(2, '0')
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+function toDatePart(isoString) {
+    if (!isoString) return ''
+    const d = new Date(isoString)
+    const pad = (n) => String(n).padStart(2, '0')
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
+function toTimePart(isoString) {
+    if (!isoString) return ''
+    const d = new Date(isoString)
+    const pad = (n) => String(n).padStart(2, '0')
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}`
 }

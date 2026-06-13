@@ -79,3 +79,17 @@
     padding-top: var(--space-sm);
     border-top: 1px solid var(--outline-variant);
 }
+
+.ghostInput {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--outline-variant);
+    padding: var(--space-sm) 0;
+    font-size: 14px;
+    color: var(--on-surface);
+    font-family: var(--font-family);
+    width: 100%;
+    transition: border-color var(--transition-fast);
+}
+.ghostInput:focus { outline: none; border-bottom: 2px solid var(--primary); }
+.ghostInput:disabled { opacity: 0.4; cursor: not-allowed; }

@@ -9,25 +9,28 @@ import styles from './TaskForm.module.css'
 const EMPTY_FORM = {
     title: '', description: '',
     status: 'TODO', priority: 'MEDIUM',
-    dueDate: '', categoryId: '', tagIds: [],
+    date: '', time: '',  
+    categoryId: '', tagIds: [],
 }
 
 export function TaskForm({ task = null, onClose }) {
     // es edicion real solo si la task tiene id 
     const isEditing = !!task?.id
 
-    const [form, setForm] = useState(() => ({
-        ...EMPTY_FORM,
-        ...(task && {
-            title: task.title ?? '',
-            description: task.description ?? '',
-            status: task.status ?? EMPTY_FORM.status,
-            priority: task.priority ?? EMPTY_FORM.priority,
-            dueDate: task.dueDate ? task.dueDate.split('T')[0] : '',
-            categoryId: task.category?.id ?? '',
-            tagIds: task.tags?.map((t) => t.id) ?? [],
-        }),
-    }))
+    const [form, setForm] = useState(
+        task
+            ? {
+                title: task.title,
+                description: task.description || '',
+                status: task.status,
+                priority:task.priority,
+                date: toDatePart(task.dueDate),
+                time: toTimePart(task.dueDate),
+                categoryId: task.category?.id || '',
+                tagIds: task.tags?.map((t) => t.id) || [],
+            }
+            : EMPTY_FORM
+    )
 
     const { mutate: createTask, isPending: creating } = useCreateTask()
     const { mutate: updateTask, isPending: updating } = useUpdateTask()
@@ -41,10 +44,20 @@ export function TaskForm({ task = null, onClose }) {
     function handleSubmit(e) {
         e.preventDefault()
 
+        let dueDate = null
+        if (form.date) {
+            const time = form.time || '00:00'
+            dueDate = new Date(`${form.date}T${time}`).toISOString()
+        }
+
         const data = {
-            ...form,
-            dueDate: form.dueDate ? new Date(form.dueDate).toISOString() : null,
+            title: form.title,
+            description: form.description || null,
+            status: form.status,
+            priority: form.priority,
+            dueDate,
             categoryId: form.categoryId || null,
+            tagIds: form.tagIds,
         }
 
         if (isEditing) {
@@ -120,12 +133,27 @@ export function TaskForm({ task = null, onClose }) {
                     </div>
 
 
-                    <Input id="dueDate"
-                        name="dueDate"
-                        type="date"
-                        label="Fecha Limite"
-                        value={form.dueDate}
-                        onChange={handleChange}/>
+                    <div className={styles.row}>
+                        <div className={styles.field}>
+                            <label className={styles.label}>Fecha</label>
+                            <input id="date"
+                                name="date"
+                                type="date"
+                                className={styles.ghostInput}
+                                value={form.date}
+                                onChange={handleChange}/>
+                        </div>
+                        <div className={styles.field}>
+                            <label className={styles.label}>Hora (opcional)</label>
+                            <input id="time"
+                                name="time"
+                                type="time"
+                                className={styles.ghostInput}
+                                value={form.time}
+                                onChange={handleChange}
+                                disabled={!form.date}/>
+                        </div>
+                    </div>
 
                     <div className={styles.actions}>
                         <Button variant="ghost" type="button" onClick={onClose}>Cancel</Button>
@@ -137,4 +165,18 @@ export function TaskForm({ task = null, onClose }) {
             </div>
         </div>
     )
+}
+
+function toDatePart(isoString) {
+    if (!isoString) return ''
+    const d = new Date(isoString)
+    const pad = (n) => String(n).padStart(2, '0')
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
+function toTimePart(isoString) {
+    if (!isoString) return ''
+    const d = new Date(isoString)
+    const pad = (n) => String(n).padStart(2, '0')
+    return `${pad(d.getHours())}:${pad(d.getMinutes())}`
 }

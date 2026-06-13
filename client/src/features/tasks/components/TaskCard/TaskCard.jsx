@@ -81,5 +81,7 @@ function isPastDue(date) {
 }
 
 function formatDate(date) {
-    return new Date(date).toLocaleDateString('es-ES', { month: 'short', day: 'numeric' })
+    return new Date(date).toLocaleDateString('es-ES', {
+        month: 'short', day: 'numeric', hour:'2-digit', minute: '2-digit',
+    })
 }

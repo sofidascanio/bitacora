@@ -139,3 +139,14 @@
     flex: 1;
     margin-top: -2px;
 }
+
+.dateTimeGroup {
+    display: flex;
+    gap: var(--space-xs);
+    flex: 1;
+}
+
+.timeInput {
+    width: 90px;
+    flex-shrink: 0;
+}
