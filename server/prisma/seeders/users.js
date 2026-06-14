@@ -7,17 +7,14 @@ const USERS_DATA = [
     {
         username: 'admin',
         email: 'admin@example.com',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',
     },
     {
-        username: 'martin_garcia',
-        email: 'martin.garcia@example.com',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=martin',
+        username: 'martingarcia',
+        email: 'martingarcia@example.com',
     },
     {
-        username: 'sofia_lopez',
-        email: 'sofia.lopez@example.com',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=sofia',
+        username: 'sofialopez',
+        email: 'sofialopez@example.com',
     },
 ]
 
