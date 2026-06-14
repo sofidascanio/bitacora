@@ -103,3 +103,15 @@ export function useUpsertBudget() {
         },
     })
 }
+
+export function useDeleteBudget() {
+    const qc = useQueryClient()
+    return useMutation({
+        mutationFn: (id) => expensesApi.deleteBudget(id),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: expenseKeys.all })
+            toast.success('Se borró el presupuesto.')
+        },
+        onError: () => toast.error('No se pudo borrar el presupuesto.'),
+    })
+}

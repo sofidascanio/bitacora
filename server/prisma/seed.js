@@ -1,34 +1,39 @@
 import { PrismaClient } from '@prisma/client'
+import { cleanDatabase } from './seeders/clean.js'
+import { seedExpenseCategories } from './seeders/expenseCategories.js'
+import { seedUsers } from './seeders/users.js'
+import { seedCategoriesAndTags } from './seeders/categoriesAndTags.js'
+import { seedTasks } from './seeders/tasks.js'
+import { seedNotes } from './seeders/notes.js'
+import { seedExpenses } from './seeders/expenses.js'
+import { seedBudgets } from './seeders/budgets.js'
 
 const prisma = new PrismaClient()
 
-const EXPENSE_CATEGORIES = [
-    { name: 'Comida', color: '#ef4444', icon: 'restaurant' },
-    { name: 'Transporte', color: '#f97316', icon: 'directions_car' },
-    { name: 'Casa', color: '#8b5cf6', icon: 'home' },
-    { name: 'Salud', color: '#10b981', icon: 'favorite' },
-    { name: 'Entretenimiento', color: '#3b82f6', icon: 'sports_esports' },
-    { name: 'Shopping', color: '#ec4899', icon: 'shopping_bag' },
-    { name: 'Educación', color: '#6366f1', icon: 'school' },
-    { name: 'Viajes', color: '#0ea5e9', icon: 'flight' },
-    { name: 'Subscripciones', color: '#14b8a6', icon: 'subscriptions' },
-    { name: 'Cuidado Personal', color: '#f59e0b', icon: 'self_improvement' },
-    { name: 'Ahorros', color: '#22c55e', icon: 'savings' },
-    { name: 'Otros', color: '#6b7280', icon: 'more_horiz' },
-]
-
 async function main() {
-    console.log('Seed de categorias de gastos...')
+    console.log('Iniciando seed completo...\n')
 
-    for (const cat of EXPENSE_CATEGORIES) {
-        await prisma.expenseCategory.upsert({
-            where: { name: cat.name },
-            update: { color: cat.color, icon: cat.icon },
-            create: cat,
-        })
-    }
+    // if (process.env.SEED_CLEAN === 'true') {
+    //     await cleanDatabase(prisma)
+    //     console.log('')
+    // }
+    await cleanDatabase(prisma)
 
-    console.log(`✅ ${EXPENSE_CATEGORIES.length} categorias de gastos agregadas..`)
+    const expenseCategories = await seedExpenseCategories(prisma)
+
+    const users = await seedUsers(prisma)
+
+    const { categories, tags } = await seedCategoriesAndTags(prisma, users)
+
+    await seedTasks(prisma, users, categories, tags)
+
+    await seedNotes(prisma, users, categories, tags)
+
+    await seedExpenses(prisma, users, expenseCategories)
+
+    await seedBudgets(prisma, users, expenseCategories)
+
+    console.log('\n Seed completo finalizado.')
 }
 
 main()

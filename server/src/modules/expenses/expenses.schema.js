@@ -30,7 +30,7 @@ export const createExpenseCategorySchema = z.object({
 export const updateExpenseCategorySchema = createExpenseCategorySchema.partial()
 
 export const upsertBudgetSchema = z.object({
-    amount: z.number().positive(),
+    amount: z.number().nonnegative(), // permite 0, rechaza negativos
     month: z.number().int().min(1).max(12),
     year: z.number().int().min(2000).max(2100),
     categoryId: z.string().cuid(),

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useExpenses, useExpenseStats, useExpenseCategories,
-        useDeleteExpense, useUpsertBudget,
+        useDeleteExpense, useUpsertBudget, useDeleteBudget, useBudgets
 } from '../features/expenses/hooks/useExpenses.js'
 import { ExpenseForm } from '../features/expenses/components/ExpenseForm/ExpenseForm.jsx'
 import { Button } from '../components/common/Button/Button.jsx'
@@ -24,9 +24,11 @@ export function ExpensesPage() {
     const { data: expenseData, isLoading } = useExpenses({ ...params, limit: 50 })
     const { data: stats } = useExpenseStats(params)
     const { data: categories = [] } = useExpenseCategories()
+    const { data: budgets = [] } = useBudgets({ month, year })
 
     const { mutate: deleteExpense } = useDeleteExpense()
     const { mutate: upsertBudget } = useUpsertBudget()
+    const { mutate: deleteBudget } = useDeleteBudget()
 
     const expenses = expenseData?.expenses ?? []
 
@@ -40,9 +42,16 @@ export function ExpensesPage() {
         else setMonth((m) => m + 1)
     }
 
-    function handleBudgetChange(categoryId, value) {
-        if (!value || isNaN(value)) return
-        upsertBudget({ categoryId, amount: parseFloat(value), month, year })
+    function handleBudgetChange(categoryId, value, budgetId) {
+        const parsed = parseFloat(value)
+
+        // campo vacio o 0, borra presupuesto si existe
+        if (value === '' || value === '0' || isNaN(parsed) || parsed <= 0) {
+            if (budgetId) deleteBudget(budgetId)
+            return
+        }
+
+        upsertBudget({ categoryId, amount: parsed, month, year })
     }
 
     const fmt = (n) => new Intl.NumberFormat('en-US', {
@@ -238,7 +247,9 @@ export function ExpensesPage() {
                     </p>
                     <div className={styles.budgetList}>
                         {categories.map((cat) => {
-                            const catStat = stats?.byCategory?.find((r) => r.category?.id === cat.id)
+                            const catStat  = stats?.byCategory?.find((r) => r.category?.id === cat.id)
+                            const catBudget = budgets.find((b) => b.categoryId === cat.id)
+
                             return (
                                 <div key={cat.id} className={styles.budgetRow}>
                                     <div className={styles.budgetIcon}
@@ -256,10 +267,11 @@ export function ExpensesPage() {
                                         <input type="number"
                                             step="0.01"
                                             min="0"
-                                            placeholder="Sin limite"
-                                            defaultValue={catStat?.budget ?? ''}
+                                            placeholder="Sin límite"
+                                            defaultValue={catBudget?.amount ?? ''}
+                                            key={`budget-${cat.id}-${catBudget?.amount ?? 'empty'}`}
                                             className={styles.budgetInput}
-                                            onBlur={(e) => handleBudgetChange(cat.id, e.target.value)}
+                                            onBlur={(e) => handleBudgetChange(cat.id, e.target.value, catBudget?.id)}
                                             onKeyDown={(e) => e.key === 'Enter' && e.target.blur()}/>
                                     </div>
                                 </div>
