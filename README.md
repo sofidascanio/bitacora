@@ -348,7 +348,7 @@ Todos los endpoints requieren `Authorization: Bearer <token>`, excepto las rutas
 | Método | Ruta                 | Cuerpo                        | Descripción                  |
 | ------ | -------------------- | ----------------------------- | ---------------------------- |
 | `POST` | `/api/auth/register` | `{username, email, password}` | Crear cuenta                 |
-| `POST` | `/api/auth/login`    | `{email, password}`           | Iniciar sesión, devuelve JWT |
+| `POST` | `/api/auth/login`    | `{username, password}`        | Iniciar sesión, devuelve JWT |
 | `GET`  | `/api/auth/me`       | —                             | Obtener usuario actual       |
 
 ### Tareas
@@ -419,8 +419,10 @@ Todos los errores siguen esta estructura:
 
 ```json
 {
-  "message": "Validation error",
-  "errors": [{ "field": "email", "message": "Invalid email address" }]
+  "message": "Error de validación",
+  "errors": [
+    { "field": "username", "message": "El nombre de usuario es obligatorio" }
+  ]
 }
 ```
 

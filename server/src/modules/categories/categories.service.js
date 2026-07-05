@@ -12,13 +12,13 @@ export const categoriesService = {
 
     async updateCategory({ id, userId, data }) {
         const existing = await categoriesRepository.findById({ id, userId })
-        if (!existing) throw ApiError.notFound('Category not found')
+        if (!existing) throw ApiError.notFound('No se encontro la categoría.')
         return categoriesRepository.update({ id, userId, data })
     },
 
     async deleteCategory({ id, userId }) {
         const existing = await categoriesRepository.findById({ id, userId })
-        if (!existing) throw ApiError.notFound('Category not found')
+        if (!existing) throw ApiError.notFound('No se encontro la categoría.')
         return categoriesRepository.delete({ id, userId })
     },
 }

@@ -6,7 +6,7 @@ import { Button } from '../components/common/Button/Button.jsx'
 import styles from './AuthPage.module.css'
 
 export function LoginPage() {
-    const [form, setForm] = useState({ email: '', password: '' })
+    const [form, setForm] = useState({ username: '', password: '' })
     const { mutate: login, isPending, error } = useLogin()
 
     const apiError = error?.response?.data?.message
@@ -31,11 +31,11 @@ export function LoginPage() {
                 {apiError && <div className={styles.alert}>{apiError}</div>}
 
                 <form onSubmit={handleSubmit} className={styles.form}>
-                    <Input id="email"
-                        name="email"
-                        type="email"
-                        label="Email"
-                        placeholder="nombre@ejemplo.com"
+                    <Input id="username"
+                        name="username"
+                        type="text"
+                        label="Usuario"
+                        placeholder="tu_usuario"
                         value={form.email}
                         onChange={handleChange}
                         required/>
@@ -53,7 +53,7 @@ export function LoginPage() {
                 </form>
 
                 <p className={styles.footer}>
-                    No tenes cuenta?{' '}
+                    ¿No tenes cuenta?{' '}
                     <Link to="/register" className={styles.link}>Crear Cuenta</Link>
                 </p>
             </div>

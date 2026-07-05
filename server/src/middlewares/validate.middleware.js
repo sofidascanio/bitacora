@@ -12,7 +12,7 @@ export function validate(schema) {
                     field: e.path.join('.'),
                     message: e.message,
                 }))
-                return next(ApiError.badRequest('Validation error', errors))
+                return next(ApiError.badRequest('Error de validación', errors))
             }
             next(err)
         }

@@ -107,6 +107,7 @@ export const expensesRepository = {
 
         // total de los ultimos 6 meses para el grafico de tendencia
         const sixMonthsAgo = new Date(year, month - 7, 1)
+        // prisma no deja group by sobre date_trunc
         const monthlyTrend = await prisma.$queryRaw`
             SELECT
                 DATE_TRUNC('month', date) AS month,

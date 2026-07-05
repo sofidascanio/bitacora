@@ -32,24 +32,19 @@ export const authService = {
         return { user, token }
     },
 
-    async login({ email, password }) {
-        // usa findByEmail que devuelve el password findById no lo devuelve)
-        const user = await authRepository.findByEmail(email)
+    async login({ username, password }) {
+        const user = await authRepository.findByUsername(username)
 
-        // msj generico
         if (!user) {
-            throw ApiError.unauthorized('Credenciales invalidas')
+            throw ApiError.unauthorized('Credenciales incorrectas')
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
-
         if (!isPasswordValid) {
-            throw ApiError.unauthorized('Credenciales invalidas')
+            throw ApiError.unauthorized('Credenciales incorrectas')
         }
 
-        // devuelve el usuario sin el password
         const { password: _, ...userWithoutPassword } = user
-
         const token = signToken({ userId: user.id })
 
         return { user: userWithoutPassword, token }

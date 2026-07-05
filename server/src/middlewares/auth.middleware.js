@@ -8,7 +8,7 @@ export async function authMiddleware(req, res, next) {
         const authHeader = req.headers.authorization
 
         if (!authHeader?.startsWith('Bearer ')) {
-            throw ApiError.unauthorized('No token provided')
+            throw ApiError.unauthorized('No hay token.')
         }
 
         const token = authHeader.split(' ')[1]
@@ -17,7 +17,7 @@ export async function authMiddleware(req, res, next) {
         try {
             decoded = jwt.verify(token, env.JWT_SECRET)
         } catch {
-            throw ApiError.unauthorized('Invalid or expired token')
+            throw ApiError.unauthorized('Token invalido')
         }
 
         // verifica que el usuario todavia exista en la bd
@@ -27,7 +27,7 @@ export async function authMiddleware(req, res, next) {
         })
 
         if (!user) {
-            throw ApiError.unauthorized('User not found')
+            throw ApiError.unauthorized('No se encontro el usuario')
         }
 
         req.user = user

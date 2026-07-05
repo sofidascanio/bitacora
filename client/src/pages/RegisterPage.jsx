@@ -34,8 +34,8 @@ export function RegisterPage() {
                     <Input id="username"
                         name="username"
                         type="text"
-                        label="Username"
-                        placeholder="tunombre"
+                        label="Nombre de Usuario"
+                        placeholder="tu_usuario"
                         value={form.username}
                         onChange={handleChange}
                         required/>
@@ -50,8 +50,8 @@ export function RegisterPage() {
                     <Input id="password"
                         name="password"
                         type="password"
-                        label="Password"
-                        placeholder="Al menos 8 caracteres"
+                        label="Contraseña"
+                        placeholder="Mínimo 8 caracteres"
                         value={form.password}
                         onChange={handleChange}
                         required/>
@@ -61,7 +61,7 @@ export function RegisterPage() {
                 </form>
 
                 <p className={styles.footer}>
-                    Ya tenes cuenta?{' '}
+                    ¿Ya estas registrado?{' '}
                     <Link to="/login" className={styles.link}>Iniciar Sesión</Link>
                 </p>
             </div>

@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
 export const createExpenseSchema = z.object({
-    amount: z.number().positive('Amount must be positive').multipleOf(0.01),
+    amount: z.number().positive('El monto debe ser positivo').multipleOf(0.01),
     description: z.string().max(500).optional().nullable(),
     date: z.string().datetime({ offset: true }).optional(),
-    categoryId: z.string().cuid('Invalid category'),
+    categoryId: z.string().cuid('Categoría invalida'),
 })
 
 export const updateExpenseSchema = createExpenseSchema.partial()
